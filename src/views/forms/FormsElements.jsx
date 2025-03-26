@@ -15,6 +15,7 @@ const FormsElements = () => {
     { value: 'N/A', label: 'N/A' },
     { value: 'Giro', label: 'Giro' },
     { value: 'Bid Food', label: 'Bid Food' },
+    
    
   ];
 
@@ -22,6 +23,10 @@ const FormsElements = () => {
     { value: 'KG', label: 'Kilogram' },
     { value: 'BT', label: 'Bottles' },
     { value: 'UN', label: 'Units' },
+    { value: 'G', label: 'Grams' },
+    { value: 'L', label: 'Litres' },
+    { value: 'CS', label: 'Case' },
+
   ];
 
   // Handle form submission

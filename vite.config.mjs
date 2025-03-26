@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       open: true,
       // this sets a default port to 3000
       port: PORT,
-      allowedHosts: ['8192-92-40-187-216.ngrok-free.app', '6e21-2a04-4a43-8b1f-ff29-3c1c-6283-d771-4515.ngrok-free.app']
+      allowedHosts: ['8192-92-40-187-216.ngrok-free.app', 'efc1-176-35-152-206.ngrok-free.app','excellencycatering.com/']
     },
     define: {
       global: 'window'

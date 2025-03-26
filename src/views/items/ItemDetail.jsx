@@ -11,7 +11,23 @@ const ItemDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
-  const [formData, setFormData] = useState({ item_name: '', supplier_name: '', total_quantity: '' });
+  const [formData, setFormData] = useState({ item_name: '', supplier_name: '', total_quantity: '', unit: '' });
+
+  // Define options matching Django model
+  const supplierOptions = [
+    { value: 'N/A', label: 'N/A' },
+    { value: 'Bid Food', label: 'Bid Food' },
+    { value: 'Giro', label: 'Giro' },
+  ];
+
+  const unitOptions = [
+    { value: 'KG', label: 'Kilogram' },
+    { value: 'BT', label: 'Bottles' },
+    { value: 'UN', label: 'Units' },
+    { value: 'G', label: 'Grams' },
+    { value: 'L', label: 'Litres' },
+    { value: 'CS', label: 'Case' },
+  ];
 
   useEffect(() => {
     const fetchItemDetails = async () => {
@@ -36,6 +52,7 @@ const ItemDetail = () => {
           item_name: stockResponse.data.item_name,
           supplier_name: stockResponse.data.supplier_name,
           total_quantity: stockResponse.data.total_quantity,
+          unit: stockResponse.data.unit,
         });
       } catch (err) {
         setError(err.response?.data?.detail || 'Failed to load item details.');
@@ -67,7 +84,7 @@ const ItemDetail = () => {
   };
 
   const currentStock = transactions.reduce((acc, entry) => {
-    return entry.transaction_type === 'IN' ? acc + entry.quantity : acc - entry.quantity;
+    return entry.transaction_type === 'IN' ? acc + parseFloat(entry.quantity) : acc - parseFloat(entry.quantity);
   }, 0);
 
   if (loading) return <div>Loading...</div>;
@@ -90,9 +107,8 @@ const ItemDetail = () => {
                     <h5>General Information</h5>
                     <p><strong>Name:</strong> {item.item_name}</p>
                     <p><strong>Supplier:</strong> {item.supplier_name}</p>
-                    <p><strong>Total Quantity:</strong> {item.total_quantity} {item.unit}</p>
-                    <p><strong>Unit Type:</strong> {item.unit}</p>
-                    <p><strong>Current Stock:</strong> {currentStock} {item.unit}</p>
+                    <p><strong>Total Quantity:</strong> {item.total_quantity} {unitOptions.find(opt => opt.value === item.unit)?.label || item.unit}</p>
+                    <p><strong>Current Stock:</strong> {currentStock.toFixed(2)} {unitOptions.find(opt => opt.value === item.unit)?.label || item.unit}</p>
                   </Col>
                   <Col md={6}>
                     <h5>Additional Details</h5>
@@ -135,11 +151,39 @@ const ItemDetail = () => {
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Supplier Name</Form.Label>
-                  <Form.Control type="text" name="supplier_name" value={formData.supplier_name} onChange={handleChange} />
+                  <Form.Control
+                    as="select"
+                    name="supplier_name"
+                    value={formData.supplier_name}
+                    onChange={handleChange}
+                  >
+                    {supplierOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Total Quantity</Form.Label>
-                  <Form.Control type="number" name="total_quantity" value={formData.total_quantity} onChange={handleChange} />
+                  <Form.Control
+                    type="number"
+                    step="0.01"
+                    name="total_quantity"
+                    value={formData.total_quantity}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Unit</Form.Label>
+                  <Form.Control
+                    as="select"
+                    name="unit"
+                    value={formData.unit}
+                    onChange={handleChange}
+                  >
+                    {unitOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
                 <Button variant="success" onClick={handleSave} className="mt-3">Save</Button>
                 <Button variant="secondary" onClick={() => setEditing(false)} className="mt-3 ml-2">Cancel</Button>
