@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => {
         ]
       }
     },
-    base: API_URL,
+    base: './',
     plugins: [react(), jsconfigPaths()]
   };
 });
