@@ -14,7 +14,7 @@ const WeddingDetail = () => {
     const fetchWedding = async () => {
       const token = localStorage.getItem('accessToken');
       if (!token) {
-        setError('You must be logged in to view wedding details.');
+        setError('You must be logged in to view wedding detail.');
         setLoading(false);
         return;
       }
