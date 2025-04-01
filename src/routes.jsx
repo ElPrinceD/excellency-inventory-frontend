@@ -57,6 +57,11 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/tables/wedding',
+        element: lazy(() => import('./views/tables/WeddingListPage'))
+      },
+      {
+        exact: 'true',
         path: '/basic/button',
         element: lazy(() => import('./views/ui-elements/basic/BasicButton'))
       },
@@ -92,6 +97,12 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/forms/add-wedding',
+        element: lazy(() => import('./views/forms/AddWedding'))
+      },
+      
+      {
+        exact: 'true',
         path: '/tables/bootstrap',
         element: lazy(() => import('./views/tables/BootstrapTable'))
       },
@@ -99,6 +110,11 @@ const routes = [
         exact: 'true',
         path: '/item/:id', // Added ItemDetail route
         element: lazy(() => import('./views/items/ItemDetail')) // Adjust path based on your project structure
+      },
+      {
+        exact: 'true',
+        path: '/weddings/:id', // Added ItemDetail route
+        element: lazy(() => import('./views/items/WeddingDetail')) // Adjust path based on your project structure
       },
       {
         exact: 'true',
