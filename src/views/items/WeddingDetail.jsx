@@ -58,6 +58,13 @@ const WeddingDetail = () => {
     return <div>Wedding not found.</div>;
   }
 
+  const dishCategories = [
+    'salad', 'starter', 'rice', 'curry', 'main_course', 'sauce', 'dessert', 'drink'
+  ].map(category => ({
+    title: category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' '),
+    dishes: getDishesByType(wedding.dishes, category)
+  })).filter(cat => cat.dishes.length > 0);
+
   return (
     <>
       <style>
@@ -70,33 +77,93 @@ const WeddingDetail = () => {
               border-bottom: none;
             }
             .card-body {
-              padding-top: 0;
+              padding: 0.25rem; /* Tight padding for print */
+            }
+            @page {
+              size: A4;
+              margin: 0.25in; /* Smaller margins for max content */
+            }
+            body {
+              font-size: 10pt; /* Smaller base font for print */
+            }
+            .wedding-title {
+              font-size: 14pt; /* Adjusted for print */
+              margin-bottom: 0.25rem;
+            }
+            .info-line {
+              font-size: 10pt; /* Smaller for print */
+              margin-bottom: 0.2rem;
+            }
+            .category-title {
+              font-size: 10pt; /* Smaller for print */
+              margin-bottom: 0.2rem;
+            }
+            .dish-item {
+              font-size: 9pt; /* Smaller for print */
+              margin-bottom: 0.1rem;
+            }
+            .additional-info-title {
+              font-size: 10pt; /* Smaller for print */
+              margin-top: 0.25rem;
+              margin-bottom: 0.2rem;
+            }
+            .additional-info-content {
+              font-size: 9pt; /* Smaller for print */
+              margin-bottom: 0.1rem;
             }
           }
-          .wedding-title {
-            font-size: 1.5rem; /* Enlarged title font */
-            text-align: center;
-            margin-bottom: 1rem;
+          .wedding-container {
+            max-width: 1200px; /* Larger container width */
+            margin: 0 auto; /* Center the container */
           }
-          .category-title {
-            font-size: 1.25rem; /* Enlarged category titles */
-            font-weight: bold;
+          .wedding-title {
+            font-size: 1.5rem; /* Larger for screen */
             text-align: center;
-            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+          }
+          .info-line {
+            font-size: 1.25rem; /* Larger for screen */
+            text-align: center; /* Center-aligned */
             margin-bottom: 0.5rem;
           }
-          .category-content {
-            font-size: 1.1rem; /* Enlarged content font */
-            text-align: center;
+          .category-title {
+            font-size: 1.25rem; /* Larger for screen */
+            font-weight: bold;
+            text-align: left; /* Dish titles left-aligned */
+            margin-bottom: 0.5rem;
+            text-decoration: underline; /* Underline headings */
           }
           .dish-item {
-            margin-bottom: 0.25rem; /* Spacing between dishes */
+            font-size: 1.1rem; /* Larger for screen */
+            text-align: left; /* Dishes left-aligned */
+            margin-bottom: 0.25rem; /* Slightly more spacing on screen */
+          }
+          .two-column-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+          }
+          .column {
+            width: 48%; /* Slightly less than half to avoid overlap */
+          }
+          .additional-info-title {
+            font-size: 1.25rem; /* Larger for screen */
+            font-weight: bold;
+            text-align: center; /* Center-aligned */
+            margin-top: 0.75rem;
+            margin-bottom: 0.5rem;
+            text-decoration: underline; /* Underlined */
+          }
+          .additional-info-content {
+            font-size: 1.1rem; /* Larger for screen */
+            text-align: center; /* Center-aligned */
+            margin-bottom: 0.25rem;
           }
         `}
       </style>
       <Row>
         <Col>
-          <Card>
+          <Card className="wedding-container">
             <Card.Header>
               <Card.Title as="h5" className="wedding-title">
                 {wedding.name}'s Wedding
@@ -111,42 +178,40 @@ const WeddingDetail = () => {
               </div>
             </Card.Header>
             <Card.Body>
-              <Card.Text className="category-title">Date</Card.Text>
-              <div className="category-content">
-                <strong>{new Date(wedding.date).toLocaleDateString()}</strong>
+              <div className="info-line">
+                <strong>Date:</strong> <strong>{new Date(wedding.date).toLocaleDateString()}</strong> {wedding.time}{' '}
+                {wedding.hall.name} - <strong>Guests:</strong> <strong>{wedding.number_of_guests}</strong>
               </div>
 
-              <Card.Text className="category-title">Time</Card.Text>
-              <div className="category-content">
-                <strong>{wedding.time}</strong>
-              </div>
-
-              <Card.Text className="category-title">Hall</Card.Text>
-              <div className="category-content">{wedding.hall.name}</div>
-
-              <Card.Text className="category-title">Number of Guests</Card.Text>
-              <div className="category-content">
-                <strong>{wedding.number_of_guests}</strong>
-              </div>
-
-              {['salad', 'starter', 'rice', 'curry', 'main_course', 'sauce', 'dessert', 'drink'].map((category) => {
-                const dishes = getDishesByType(wedding.dishes, category);
-                return dishes.length > 0 ? (
-                  <div key={category}>
-                    <Card.Text className="category-title">
-                      {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
-                    </Card.Text>
-                    <div className="category-content">
-                      {dishes.map((dish, index) => (
-                        <div key={index} className="dish-item">{dish}</div>
-                      ))}
-                    </div>
+              {/* Two-column layout for dish categories */}
+              {Array.from({ length: Math.ceil(dishCategories.length / 2) }).map((_, index) => (
+                <div key={index} className="two-column-row">
+                  <div className="column">
+                    {dishCategories[index * 2] && (
+                      <>
+                        <div className="category-title">{dishCategories[index * 2].title}</div>
+                        {dishCategories[index * 2].dishes.map((dish, i) => (
+                          <div key={i} className="dish-item">{dish}</div>
+                        ))}
+                      </>
+                    )}
                   </div>
-                ) : null;
-              })}
+                  <div className="column">
+                    {dishCategories[index * 2 + 1] && (
+                      <>
+                        <div className="category-title">{dishCategories[index * 2 + 1].title}</div>
+                        {dishCategories[index * 2 + 1].dishes.map((dish, i) => (
+                          <div key={i} className="dish-item">{dish}</div>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
 
-              <Card.Text className="category-title">Additional Info</Card.Text>
-              <div className="category-content">{wedding.additional_info || 'None'}</div>
+              {/* Additional Info at the bottom, centered */}
+              <div className="additional-info-title">Additional Info</div>
+              <div className="additional-info-content">{wedding.additional_info || 'None'}</div>
             </Card.Body>
           </Card>
         </Col>
