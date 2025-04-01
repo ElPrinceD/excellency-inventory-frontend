@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, ListGroup, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -73,13 +73,34 @@ const WeddingDetail = () => {
               padding-top: 0;
             }
           }
+          .wedding-title {
+            font-size: 1.5rem; /* Enlarged title font */
+            text-align: center;
+            margin-bottom: 1rem;
+          }
+          .category-title {
+            font-size: 1.25rem; /* Enlarged category titles */
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+          }
+          .category-content {
+            font-size: 1.1rem; /* Enlarged content font */
+            text-align: center;
+          }
+          .dish-item {
+            margin-bottom: 0.25rem; /* Spacing between dishes */
+          }
         `}
       </style>
       <Row>
         <Col>
           <Card>
             <Card.Header>
-              <Card.Title as="h5">{wedding.name}'s Wedding</Card.Title>
+              <Card.Title as="h5" className="wedding-title">
+                {wedding.name}'s Wedding
+              </Card.Title>
               <div className="float-end no-print">
                 <Button variant="primary" onClick={handlePrint} className="me-2">
                   Print
@@ -90,32 +111,42 @@ const WeddingDetail = () => {
               </div>
             </Card.Header>
             <Card.Body>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <strong>Date:</strong> <strong>{new Date(wedding.date).toLocaleDateString()}</strong>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Time:</strong> <strong>{wedding.time}</strong>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Hall:</strong> {wedding.hall.name}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Number of Guests:</strong> <strong>{wedding.number_of_guests}</strong>
-                </ListGroup.Item>
-                {['salad', 'starter', 'rice', 'curry', 'main_course', 'sauce', 'dessert', 'drink'].map((category) => {
-                  const dishes = getDishesByType(wedding.dishes, category);
-                  return dishes.length > 0 ? (
-                    <ListGroup.Item key={category}>
-                      <strong>{category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}:</strong>{' '}
-                      {dishes.join(', ')}
-                    </ListGroup.Item>
-                  ) : null;
-                })}
-                <ListGroup.Item>
-                  <strong>Additional Info:</strong> {wedding.additional_info || 'None'}
-                </ListGroup.Item>
-              </ListGroup>
+              <Card.Text className="category-title">Date</Card.Text>
+              <div className="category-content">
+                <strong>{new Date(wedding.date).toLocaleDateString()}</strong>
+              </div>
+
+              <Card.Text className="category-title">Time</Card.Text>
+              <div className="category-content">
+                <strong>{wedding.time}</strong>
+              </div>
+
+              <Card.Text className="category-title">Hall</Card.Text>
+              <div className="category-content">{wedding.hall.name}</div>
+
+              <Card.Text className="category-title">Number of Guests</Card.Text>
+              <div className="category-content">
+                <strong>{wedding.number_of_guests}</strong>
+              </div>
+
+              {['salad', 'starter', 'rice', 'curry', 'main_course', 'sauce', 'dessert', 'drink'].map((category) => {
+                const dishes = getDishesByType(wedding.dishes, category);
+                return dishes.length > 0 ? (
+                  <div key={category}>
+                    <Card.Text className="category-title">
+                      {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
+                    </Card.Text>
+                    <div className="category-content">
+                      {dishes.map((dish, index) => (
+                        <div key={index} className="dish-item">{dish}</div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })}
+
+              <Card.Text className="category-title">Additional Info</Card.Text>
+              <div className="category-content">{wedding.additional_info || 'None'}</div>
             </Card.Body>
           </Card>
         </Col>
