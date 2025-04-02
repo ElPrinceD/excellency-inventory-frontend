@@ -68,98 +68,100 @@ const WeddingDetail = () => {
   return (
     <>
       <style>
-        {`
-          @media print {
-            .no-print {
-              display: none;
-            }
-            .card-header {
-              border-bottom: none;
-            }
-            .card-body {
-              padding: 0.25rem; /* Tight padding for print */
-            }
-            @page {
-              size: A4;
-              margin: 0.25in; /* Smaller margins for max content */
-            }
-            body {
-              font-size: 10pt; /* Smaller base font for print */
-            }
-            .wedding-title {
-              font-size: 14pt; /* Adjusted for print */
-              margin-bottom: 0.25rem;
-            }
-            .info-line {
-              font-size: 10pt; /* Smaller for print */
-              margin-bottom: 0.2rem;
-            }
-            .category-title {
-              font-size: 10pt; /* Smaller for print */
-              margin-bottom: 0.2rem;
-            }
-            .dish-item {
-              font-size: 9pt; /* Smaller for print */
-              margin-bottom: 0.1rem;
-            }
-            .additional-info-title {
-              font-size: 10pt; /* Smaller for print */
-              margin-top: 0.25rem;
-              margin-bottom: 0.2rem;
-            }
-            .additional-info-content {
-              font-size: 9pt; /* Smaller for print */
-              margin-bottom: 0.1rem;
-            }
-          }
-          .wedding-container {
-            max-width: 1200px; /* Larger container width */
-            margin: 0 auto; /* Center the container */
-          }
-          .wedding-title {
-            font-size: 1.5rem; /* Larger for screen */
-            text-align: center;
-            margin-bottom: 0.75rem;
-          }
-          .info-line {
-            font-size: 1.25rem; /* Larger for screen */
-            text-align: center; /* Center-aligned */
-            margin-bottom: 0.5rem;
-          }
-          .category-title {
-            font-size: 1.25rem; /* Larger for screen */
-            font-weight: bold;
-            text-align: left; /* Dish titles left-aligned */
-            margin-bottom: 0.5rem;
-            text-decoration: underline; /* Underline headings */
-          }
-          .dish-item {
-            font-size: 1.1rem; /* Larger for screen */
-            text-align: left; /* Dishes left-aligned */
-            margin-bottom: 0.25rem; /* Slightly more spacing on screen */
-          }
-          .two-column-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-          }
-          .column {
-            width: 48%; /* Slightly less than half to avoid overlap */
-          }
-          .additional-info-title {
-            font-size: 1.25rem; /* Larger for screen */
-            font-weight: bold;
-            text-align: center; /* Center-aligned */
-            margin-top: 0.75rem;
-            margin-bottom: 0.5rem;
-            text-decoration: underline; /* Underlined */
-          }
-          .additional-info-content {
-            font-size: 1.1rem; /* Larger for screen */
-            text-align: center; /* Center-aligned */
-            margin-bottom: 0.25rem;
-          }
-        `}
+        {`@media print {
+  .no-print, nav, header, footer {
+    display: none !important;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .wedding-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0.5in;
+    box-sizing: border-box;
+  }
+  .card-header {
+    border-bottom: none;
+  }
+  .card-body {
+    padding: 0;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  .wedding-title {
+    font-size: 16pt;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .info-line, .category-title, .dish-item, .additional-info-title, .additional-info-content {
+    font-size: 12pt;
+    margin-bottom: 0.3rem;
+  }
+  .two-column-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .column {
+    width: 48%;
+  }
+}
+
+.wedding-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.wedding-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+.info-line {
+  font-size: 1.25rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.category-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  text-decoration: underline;
+}
+.dish-item {
+  font-size: 1.1rem;
+  text-align: left;
+  margin-bottom: 0.25rem;
+}
+.two-column-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.column {
+  width: 48%;
+}
+.additional-info-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  text-decoration: underline;
+}
+.additional-info-content {
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+`}
       </style>
       <Row>
         <Col>
