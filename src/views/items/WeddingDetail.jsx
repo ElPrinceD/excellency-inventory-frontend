@@ -174,9 +174,10 @@ const WeddingDetail = () => {
                 <Button variant="primary" onClick={handlePrint} className="me-2">
                   Print
                 </Button>
-                <Button variant="secondary" onClick={() => navigate('/weddings')}>
-                  Back to List
-                </Button>
+                <Button variant="secondary" onClick={() => navigate(`/weddings/${id}/edit`)}>
+  Edit Details
+</Button>
+
               </div>
             </Card.Header>
             <Card.Body>

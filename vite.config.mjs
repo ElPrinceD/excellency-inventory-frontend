@@ -13,7 +13,9 @@ export default defineConfig(({ mode }) => {
       open: true,
       // this sets a default port to 3000
       port: PORT,
-      allowedHosts: true
+      allowedHosts: true,
+      historyApiFallback: true,
+
     },
     define: {
       global: 'window'

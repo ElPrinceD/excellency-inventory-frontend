@@ -52,8 +52,8 @@ const NavBar = () => {
         </Link>
       </div>
       <div style={{ justifyContent: 'space-between' }} className={collapseClass.join(' ')}>
-        <NavLeft />
-        <NavRight />
+       
+     
       </div>
     </React.Fragment>
   );

@@ -108,6 +108,11 @@ const routes = [
       },
       {
         exact: 'true',
+        path: 'weddings/:id/edit',
+        element: lazy(() => import('./views/forms/EditWeddingForm'))
+      },
+      {
+        exact: 'true',
         path: '/item/:id', // Added ItemDetail route
         element: lazy(() => import('./views/items/ItemDetail')) // Adjust path based on your project structure
       },
