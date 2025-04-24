@@ -26,7 +26,9 @@ const AddItemForm = () => {
     if (name === 'price_per_kg' || name === 'weight') {
       const price = parseFloat(updatedForm.price_per_kg || 0);
       const weight = parseFloat(updatedForm.weight || 0);
-      updatedForm.total = (price * weight);
+      updatedForm.total = (price * weight).toFixed(2); // Ensure total has 2 decimal places
+    } else if (name === 'total') {
+      updatedForm.total = parseFloat(value).toFixed(2); // Ensure manually entered total has 2 decimal places
     }
 
     setFormData(updatedForm);
@@ -134,7 +136,7 @@ const AddItemForm = () => {
                   name="total"
                   placeholder="Total"
                   value={formData.total}
-                  readOnly
+                  onChange={handleChange} // Make the total input editable and handle changes
                 />
               </Form.Group>
               <Button variant="primary" type="submit">
