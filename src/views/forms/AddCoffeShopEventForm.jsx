@@ -30,7 +30,7 @@ const AddCoffeeShopEventForm = () => {
     const staff = parseInt(data.staff_number) || 0;
     const guests = parseInt(data.number_of_guests) || 0;
 
-    return (cleaning + iceCream + staff * 50 + guests * 5).toFixed(2);
+    return (cleaning + iceCream ).toFixed(2);
   };
 
   const handleChange = (e) => {
@@ -171,7 +171,7 @@ const AddCoffeeShopEventForm = () => {
                   step="0.01"
                   name="total_cost"
                   value={formData.total_cost}
-                  disabled
+                  
                 />
               </Form.Group>
 
