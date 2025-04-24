@@ -107,6 +107,11 @@ const routes = [
       },
       {
         exact: 'true',
+        path: '/forms/add-coffeshop',
+        element: lazy(() => import('./views/forms/AddCoffeShopEventForm'))
+      },
+      {
+        exact: 'true',
         path: '/tables/bootstrap',
         element: lazy(() => import('./views/tables/BootstrapTable'))
       },
@@ -114,6 +119,11 @@ const routes = [
         exact: 'true',
         path: '/tables/inventory',
         element: lazy(() => import('./views/tables/ItemList'))
+      },
+      {
+        exact: 'true',
+        path: '/tables/coffeshop',
+        element: lazy(() => import('./views/tables/CoffeeShopEventList'))
       },
       {
         exact: 'true',

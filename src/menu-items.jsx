@@ -37,6 +37,13 @@ const menuItems = {
           url: '/forms/add-wedding'
         },
         {
+          id: 'add-coffee',
+          title: 'Add Coffee Shop Cost',
+          type: 'item',
+          icon: 'feather icon-file-text',
+          url: '/forms/add-coffeshop'
+        },
+        {
           id: 'add-inventory',
           title: 'Add Inventory',
           type: 'item',
@@ -49,6 +56,13 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-server',
           url: '/tables/inventory'
+        },
+        {
+          id: 'coffee-shop-list',
+          title: 'Coffe shop List',
+          type: 'item',
+          icon: 'feather icon-server',
+          url: '/tables/coffeshop'
         },
 
       ]
