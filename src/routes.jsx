@@ -100,11 +100,20 @@ const routes = [
         path: '/forms/add-wedding',
         element: lazy(() => import('./views/forms/AddWedding'))
       },
-      
+      {
+        exact: 'true',
+        path: '/forms/add-inventory',
+        element: lazy(() => import('./views/forms/AddItemForm'))
+      },
       {
         exact: 'true',
         path: '/tables/bootstrap',
         element: lazy(() => import('./views/tables/BootstrapTable'))
+      },
+      {
+        exact: 'true',
+        path: '/tables/inventory',
+        element: lazy(() => import('./views/tables/ItemList'))
       },
       {
         exact: 'true',

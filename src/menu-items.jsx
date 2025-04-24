@@ -35,7 +35,21 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-file-text',
           url: '/forms/add-wedding'
-        }
+        },
+        {
+          id: 'add-inventory',
+          title: 'Add Inventory',
+          type: 'item',
+          icon: 'feather icon-file-text',
+          url: '/forms/add-inventory'
+        },
+        {
+          id: 'inventor-table',
+          title: 'Inventory List',
+          type: 'item',
+          icon: 'feather icon-server',
+          url: '/tables/inventory'
+        },
 
       ]
     },
