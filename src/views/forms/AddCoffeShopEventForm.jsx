@@ -1,182 +1,165 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Form, Button, Card, Col, Row, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
-const AddCoffeeShopEventForm = () => {
-  const [formData, setFormData] = useState({
+const AddCoffeeShopEvent = () => {
+  const [form, setForm] = useState({
     date: '',
     names_of_items: '',
     number_of_guests: '',
+    other_counter_price: '',
     cleaning_price: '',
     ice_cream_price: '',
     staff_number: '',
-    total_cost: '',
   });
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+
   const token = localStorage.getItem('accessToken');
-
-  useEffect(() => {
-    if (!token) {
-      setError('You must be logged in to add an event.');
-    }
-  }, [token]);
-
-  const calculateTotalCost = (data) => {
-    const cleaning = parseFloat(data.cleaning_price) || 0;
-    const iceCream = parseFloat(data.ice_cream_price) || 0;
-    const staff = parseInt(data.staff_number) || 0;
-    const guests = parseInt(data.number_of_guests) || 0;
-
-    return (cleaning + iceCream ).toFixed(2);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedForm = { ...formData, [name]: value };
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-    // Recalculate total cost whenever any relevant field changes
-    updatedForm.total_cost = calculateTotalCost(updatedForm);
-
-    setFormData(updatedForm);
+  const calculateTotalCost = () => {
+    const { other_counter_price, cleaning_price, ice_cream_price } = form;
+    return (
+      parseFloat(other_counter_price || 0) +
+      parseFloat(cleaning_price || 0) +
+      parseFloat(ice_cream_price || 0)
+    ).toFixed(2);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-    setLoading(true);
+    const total_cost = calculateTotalCost();
 
     try {
-      await axios.post('https://excellencycatering.com/api/coffeshop/', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      setSuccess('Coffee shop event added successfully!');
-      setFormData({
+      await axios.post(
+        'https://excellencycatering.com/api/coffeshop/',
+        { ...form, total_cost },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setSuccess('Event added successfully!');
+      setError('');
+      setForm({
         date: '',
         names_of_items: '',
         number_of_guests: '',
+        other_counter_price: '',
         cleaning_price: '',
         ice_cream_price: '',
         staff_number: '',
-        total_cost: '',
       });
     } catch (err) {
-      setError('Error adding coffee shop event');
+      setError('Failed to add event. Please check your input.');
+      setSuccess('');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (!token) {
-    return <Alert variant="danger">{error}</Alert>;
-  }
-
   return (
-    <Row>
-      <Col sm={12}>
+    <Row className="justify-content-md-center">
+      <Col md={8}>
         <Card>
           <Card.Header>
-            <Card.Title as="h5">Add Coffee Shop Event</Card.Title>
+            <Card.Title>Add Coffee Shop Event</Card.Title>
           </Card.Header>
           <Card.Body>
-            {error && <Alert variant="danger">{error}</Alert>}
             {success && <Alert variant="success">{success}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Date</Form.Label>
                 <Form.Control
                   type="date"
                   name="date"
-                  value={formData.date}
+                  value={form.date}
                   onChange={handleChange}
                   required
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label>Names of Items</Form.Label>
                 <Form.Control
                   type="text"
                   name="names_of_items"
-                  placeholder="Enter items used in the event"
-                  value={formData.names_of_items}
+                  value={form.names_of_items}
                   onChange={handleChange}
-                  required
+                  placeholder="e.g., Coffee, Sandwiches"
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label>Number of Guests</Form.Label>
                 <Form.Control
                   type="number"
                   name="number_of_guests"
-                  placeholder="Enter Number of Guests"
-                  value={formData.number_of_guests}
+                  value={form.number_of_guests}
                   onChange={handleChange}
-                  min={0}
                   required
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
-                <Form.Label>Cleaning Price</Form.Label>
+                <Form.Label>Other Counter Price (£)</Form.Label>
+                <Form.Control
+                  type="number"
+                  step="0.01"
+                  name="other_counter_price"
+                  value={form.other_counter_price}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Cleaning Price (£)</Form.Label>
                 <Form.Control
                   type="number"
                   step="0.01"
                   name="cleaning_price"
-                  placeholder="Enter Cleaning Price"
-                  value={formData.cleaning_price}
+                  value={form.cleaning_price}
                   onChange={handleChange}
-                  min={0}
+                  required
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
-                <Form.Label>Ice Cream Price</Form.Label>
+                <Form.Label>Ice Cream Price (£)</Form.Label>
                 <Form.Control
                   type="number"
                   step="0.01"
                   name="ice_cream_price"
-                  placeholder="Enter Ice Cream Price"
-                  value={formData.ice_cream_price}
+                  value={form.ice_cream_price}
                   onChange={handleChange}
-                  min={0}
+                  required
                 />
               </Form.Group>
-
               <Form.Group className="mb-3">
                 <Form.Label>Staff Number</Form.Label>
                 <Form.Control
                   type="number"
                   name="staff_number"
-                  placeholder="Enter Staff Number"
-                  value={formData.staff_number}
+                  value={form.staff_number}
                   onChange={handleChange}
-                  min={0}
+                  required
                 />
               </Form.Group>
-
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-4">
                 <Form.Label>Total Cost</Form.Label>
                 <Form.Control
-                  type="number"
-                  step="0.01"
-                  name="total_cost"
-                  value={formData.total_cost}
-                  
+                  type="text"
+                  value={`£${calculateTotalCost()}`}
+                  readOnly
+                  disabled
                 />
               </Form.Group>
-
-              <Button variant="primary" type="submit" disabled={loading}>
-                {loading ? 'Submitting...' : 'Submit'}
+              <Button variant="primary" type="submit">
+                Add Event
               </Button>
             </Form>
           </Card.Body>
@@ -186,4 +169,4 @@ const AddCoffeeShopEventForm = () => {
   );
 };
 
-export default AddCoffeeShopEventForm;
+export default AddCoffeeShopEvent;
