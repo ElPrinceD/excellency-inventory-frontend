@@ -12,8 +12,10 @@ const CoffeeShopEventList = () => {
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem('accessToken');
+  console.log(token)
 
   useEffect(() => {
+
     if (!token) {
       setError('You must be logged in to view events.');
       setLoading(false);

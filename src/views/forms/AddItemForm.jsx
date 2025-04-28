@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// AddItemForm.js
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -10,25 +11,39 @@ const AddItemForm = () => {
     price_per_kg: '',
     weight: '',
     total: '',
+    company: null,
   });
+
+  const [companies, setCompanies] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
   const token = localStorage.getItem('accessToken');
-  if (!token) {
-    setError('You must be logged in to add an item.');
-    return;
-  }
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await axios.get('https://excellencycatering.com/api/companies/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCompanies(response.data);
+      } catch (err) {
+        console.error('Failed to fetch companies:', err);
+      }
+    };
+    fetchCompanies();
+  }, []);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    const updatedForm = { ...formData, [name]: value };
+    let updatedForm = { ...formData, [name]: value };
 
     if (name === 'price_per_kg' || name === 'weight') {
       const price = parseFloat(updatedForm.price_per_kg || 0);
       const weight = parseFloat(updatedForm.weight || 0);
-      updatedForm.total = (price * weight).toFixed(2); // Ensure total has 2 decimal places
-    } else if (name === 'total') {
-      updatedForm.total = parseFloat(value).toFixed(2); // Ensure manually entered total has 2 decimal places
+      updatedForm.total = (price * weight).toFixed(2);
     }
 
     setFormData(updatedForm);
@@ -40,12 +55,16 @@ const AddItemForm = () => {
     setSuccess(null);
 
     try {
-      await axios.post('https://excellencycatering.com/api/items/', formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      await axios.post(
+        'https://excellencycatering.com/api/items/',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       setSuccess('Item purchase added successfully!');
       setFormData({
         date: '',
@@ -54,6 +73,7 @@ const AddItemForm = () => {
         price_per_kg: '',
         weight: '',
         total: '',
+        company: null,
       });
     } catch (err) {
       setError('Error adding item purchase');
@@ -87,7 +107,6 @@ const AddItemForm = () => {
                 <Form.Control
                   type="text"
                   name="item_id"
-                  placeholder="Enter Item ID"
                   value={formData.item_id}
                   onChange={handleChange}
                   required
@@ -98,19 +117,33 @@ const AddItemForm = () => {
                 <Form.Control
                   type="text"
                   name="name"
-                  placeholder="Enter Item Name"
                   value={formData.name}
                   onChange={handleChange}
                   required
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Price per Kg / Each</Form.Label>
+                <Form.Label>Company</Form.Label>
+                <Form.Select
+                  name="company"
+                  value={formData.company || ''}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Company</option>
+                  {companies.map((company) => (
+                    <option key={company.id} value={company.id}>
+                      {company.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Price per Kg</Form.Label>
                 <Form.Control
                   type="number"
                   step="0.01"
                   name="price_per_kg"
-                  placeholder="Enter Price per Kg"
                   value={formData.price_per_kg}
                   onChange={handleChange}
                   required
@@ -122,25 +155,13 @@ const AddItemForm = () => {
                   type="number"
                   step="0.01"
                   name="weight"
-                  placeholder="Enter Weight (kg)"
                   value={formData.weight}
                   onChange={handleChange}
                   required
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Total</Form.Label>
-                <Form.Control
-                  type="number"
-                  step="0.01"
-                  name="total"
-                  placeholder="Total"
-                  value={formData.total}
-                  onChange={handleChange} // Make the total input editable and handle changes
-                />
-              </Form.Group>
               <Button variant="primary" type="submit">
-                Submit
+                Add Item
               </Button>
             </Form>
           </Card.Body>
