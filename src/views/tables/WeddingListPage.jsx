@@ -40,8 +40,11 @@ const WeddingList = () => {
     fetchWeddings();
   }, []);
 
+  // Sort weddings by date ascending (older to newer)
+  const sortedWeddings = [...weddings].sort((a, b) => new Date(a.date) - new Date(b.date));
+
   // Filter weddings based on search query
-  const filteredWeddings = weddings.filter((wedding) => {
+  const filteredWeddings = sortedWeddings.filter((wedding) => {
     const searchString = `${wedding.name} ${wedding.date} ${wedding.time} ${wedding.hall.name} ${wedding.number_of_guests} ${wedding.additional_info || ''}`.toLowerCase();
     return searchString.includes(searchQuery);
   });
